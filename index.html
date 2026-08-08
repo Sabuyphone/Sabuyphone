@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>สัญญาผ่อนออนไลน์ | SABUYPHONE บ้านไผ่</title>
+  <meta name="description" content="ทำสัญญาผ่อนโทรศัพท์ออนไลน์ ง่าย สะดวก ปลอดภัย ไม่ต้องมีคนค้ำ">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Ambient background lighting effect -->
+  <div class="ambient-bg-glow">
+    <div class="glow-blob-1"></div>
+    <div class="glow-blob-2"></div>
+  </div>
+
+  <!-- ── HEADER ─────────────────────────────────────────────────── -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-left">
+        <div class="logo">
+          <img src="/logo.png" alt="SABUYPHONE" class="logo-img" style="width: 44px; height: 44px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.4));">
+          <div class="logo-text">
+            <span class="logo-main" style="letter-spacing: 0.5px; font-weight: 800; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">SABUYPHONE</span>
+            <span class="logo-sub">บ้านไผ่</span>
+          </div>
+        </div>
+        <button class="track-header-btn" onclick="openTrackModal()">🔍 เช็คสถานะ</button>
+        <button class="theme-toggle-btn" onclick="toggleTheme()" id="theme-toggle-btn" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;font-size:16px;transition:var(--transition);margin-left:8px;">☀️</button>
+        <div class="header-divider"></div>
+        <div class="header-title-block">
+          <h1 class="header-title">สัญญาผ่อนออนไลน์</h1>
+          <p class="header-sub">ง่าย · สะดวก · ปลอดภัย · ทำได้ทุกที่</p>
+        </div>
+      </div>
+      <div class="header-badges">
+        <span class="badge badge-blue">✓ บัตรประชาชนใบเดียว</span>
+        <span class="badge badge-purple">✓ ไม่ต้องมีคนค้ำ</span>
+        <span class="badge badge-green">✓ ผ่อนได้ทุกอาชีพ</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── PROGRESS BAR ───────────────────────────────────────────── -->
+  <div class="progress-wrap">
+    <div class="progress-bar">
+      <div class="progress-track" id="progress-track"></div>
+      <div class="step-node active" data-step="1">
+        <div class="step-circle"><span class="step-num">1</span></div>
+        <span class="step-label">ข้อมูลลูกค้า</span>
+      </div>
+      <div class="step-node" data-step="2">
+        <div class="step-circle"><span class="step-num">2</span></div>
+        <span class="step-label">อัปโหลดเอกสาร</span>
+      </div>
+      <div class="step-node" data-step="3">
+        <div class="step-circle"><span class="step-num">3</span></div>
+        <span class="step-label">รายละเอียดเครื่อง</span>
+      </div>
+      <div class="step-node" data-step="4">
+        <div class="step-circle"><span class="step-num">4</span></div>
+        <span class="step-label">เงื่อนไขสัญญา</span>
+      </div>
+      <div class="step-node" data-step="5">
+        <div class="step-circle"><span class="step-num">5</span></div>
+        <span class="step-label">ยืนยันและเซ็น</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MAIN ───────────────────────────────────────────────────── -->
+  <main class="main">
+
+    <!-- STEP 1 ── ข้อมูลลูกค้า ──────────────────────────────────── -->
+    <section class="step active" id="step-1">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-step-badge">ขั้นตอน 1 จาก 5</div>
+          <h2 class="card-title">👤 ข้อมูลลูกค้า</h2>
+          <p class="card-subtitle">กรอกข้อมูลส่วนตัวให้ถูกต้องและครบถ้วน</p>
+        </div>
+
+        <!-- ID Card Front Upload & AI Scan (Step 1 Top) -->
+        <div class="upload-zone" id="zone-id-front" onclick="triggerUpload('inp-id-front')" style="margin-bottom: 28px; min-height: 140px; padding: 24px;">
+          <div class="upload-inner">
+            <div class="upload-icon-wrap"><span class="upload-emoji">🪪</span></div>
+            <p class="upload-title">ถ่ายภาพ หรือ อัปโหลดบัตรประชาชน (หน้า) <span class="req">*</span></p>
+            <p class="upload-hint">ระบบ AI จะช่วยดึงข้อมูลและสแกนกรอกฟอร์มด้านล่างให้โดยอัตโนมัติ</p>
+            <div style="display: flex; gap: 10px; margin-top: 10px; justify-content: center; width: 100%;">
+              <button type="button" class="btn btn-sm btn-primary" onclick="openCamera('id-card', 'inp-id-front', 'id_card_front', 'zone-id-front', event)">📸 ถ่ายรูปบัตร</button>
+              <div class="upload-btn" style="margin-top:0">เลือกรูปภาพ</div>
+            </div>
+          </div>
+          <input id="inp-id-front" type="file" accept="image/*" class="upload-input" onchange="handleUpload(this,'id_card_front','zone-id-front')">
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group col-full">
+            <label class="label" for="f-name">ชื่อ-นามสกุล <span class="req">*</span></label>
+            <input id="f-name" type="text" class="input" placeholder="เช่น นาย สมชาย ใจดี">
+          </div>
+          <div class="form-group">
+            <label class="label" for="f-idcard">เลขบัตรประชาชน <span class="req">*</span></label>
+            <input id="f-idcard" type="text" class="input" placeholder="1-2345-67890-12-3" maxlength="17">
+          </div>
+          <div class="form-group">
+            <label class="label" for="f-birth">วันเกิด</label>
+            <input id="f-birth" type="date" class="input">
+          </div>
+          <div class="form-group">
+            <label class="label" for="f-phone">เบอร์โทรศัพท์ <span class="req">*</span></label>
+            <input id="f-phone" type="tel" class="input" placeholder="080-123-4567" maxlength="12">
+          </div>
+          <div class="form-group">
+            <label class="label" for="f-fb">Facebook</label>
+            <input id="f-fb" type="text" class="input" placeholder="ชื่อ Facebook ของคุณ">
+          </div>
+          <div class="form-group">
+            <label class="label" for="f-line">LINE ID</label>
+            <input id="f-line" type="text" class="input" placeholder="LINE ID ของคุณ">
+          </div>
+          <div class="form-group col-full">
+            <label class="label" for="f-addr">บ้านเลขที่ / หมู่ / ซอย / ถนน <span class="req">*</span></label>
+            <textarea id="f-addr" class="input" rows="2" placeholder="เช่น 123/45 ม.1 ถ.ขอนแก่น ต.บ้านไผ่"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="label" for="f-sub">ตำบล/แขวง</label>
+            <input id="f-sub" type="text" class="input" placeholder="ตำบล/แขวง">
+          </div>
+          <div class="form-group">
+            <label class="label" for="f-dist">อำเภอ/เขต</label>
+            <input id="f-dist" type="text" class="input" placeholder="อำเภอ/เขต">
+          </div>
+          <div class="form-group">
+            <label class="label" for="f-prov">จังหวัด</label>
+            <input id="f-prov" type="text" class="input" placeholder="จังหวัด">
+          </div>
+          <div class="form-group">
+            <label class="label" for="f-post">รหัสไปรษณีย์</label>
+            <input id="f-post" type="text" class="input" placeholder="40110" maxlength="5">
+          </div>
+        </div>
+
+        <div class="card-actions">
+          <div></div>
+          <button class="btn btn-primary" onclick="nextStep()">ถัดไป <span class="btn-arrow">→</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 2 ── อัปโหลดเอกสาร ─────────────────────────────────── -->
+    <section class="step" id="step-2">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-step-badge">ขั้นตอน 2 จาก 5</div>
+          <h2 class="card-title">📎 อัปโหลดเอกสาร</h2>
+          <p class="card-subtitle">ถ่ายภาพให้ชัดเจน ไม่มีเงา และเห็นข้อความครบ</p>
+        </div>
+
+        <div class="upload-grid">
+
+
+          <div class="upload-zone" id="zone-selfie" onclick="triggerUpload('inp-selfie')">
+            <div class="upload-inner">
+              <div class="upload-icon-wrap"><span class="upload-emoji">🤳</span></div>
+              <p class="upload-title">เซลฟี่คู่บัตรประชาชน <span class="req">*</span></p>
+              <p class="upload-hint">ถือบัตรไว้ข้างหน้าใบหน้า</p>
+              <div class="upload-btn">เลือกรูปภาพ</div>
+              <button type="button" class="camera-btn" onclick="openCamera('selfie', 'inp-selfie', 'selfie', 'zone-selfie', event)">📸 ถ่ายรูปจากกล้อง</button>
+            </div>
+            <input id="inp-selfie" type="file" accept="image/*" class="upload-input" onchange="handleUpload(this,'selfie','zone-selfie')">
+          </div>
+
+          <div class="upload-zone" id="zone-house" onclick="triggerUpload('inp-house')">
+            <div class="upload-inner">
+              <div class="upload-icon-wrap"><span class="upload-emoji">🏠</span></div>
+              <p class="upload-title">รูปหน้าบ้าน <span class="req">*</span></p>
+              <p class="upload-hint">ถ่ายให้เห็นหน้าบ้านชัดเจน</p>
+              <div class="upload-btn">เลือกรูปภาพ</div>
+              <button type="button" class="camera-btn" onclick="openCamera('id-card', 'inp-house', 'house_front', 'zone-house', event)">📸 ถ่ายรูปจากกล้อง</button>
+            </div>
+            <input id="inp-house" type="file" accept="image/*" class="upload-input" onchange="handleUpload(this,'house_front','zone-house')">
+          </div>
+
+          <div class="upload-zone optional" id="zone-house-back" onclick="triggerUpload('inp-house-back')">
+            <div class="upload-inner">
+              <div class="upload-icon-wrap"><span class="upload-emoji">🏡</span></div>
+              <p class="upload-title">รูปหลังบ้าน <span class="opt-tag">ไม่บังคับ</span></p>
+              <p class="upload-hint">ถ้ามีให้ถ่ายเพิ่มเติม</p>
+              <div class="upload-btn">เลือกรูปภาพ</div>
+              <button type="button" class="camera-btn" onclick="openCamera('id-card', 'inp-house-back', 'house_back', 'zone-house-back', event)">📸 ถ่ายรูปจากกล้อง</button>
+            </div>
+            <input id="inp-house-back" type="file" accept="image/*" class="upload-input" onchange="handleUpload(this,'house_back','zone-house-back')">
+          </div>
+        </div>
+
+        <div class="card-actions">
+          <button class="btn btn-ghost" onclick="prevStep()"><span class="btn-arrow">←</span> ย้อนกลับ</button>
+          <button class="btn btn-primary" onclick="nextStep()">ถัดไป <span class="btn-arrow">→</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 3 ── รายละเอียดเครื่อง ──────────────────────────────── -->
+    <section class="step" id="step-3">
+      <div class="split-layout">
+        <!-- Left -->
+        <div class="card split-left">
+          <div class="card-header">
+            <div class="card-step-badge">ขั้นตอน 3 จาก 5</div>
+            <h2 class="card-title">📦 รายละเอียดเครื่อง</h2>
+            <p class="card-subtitle">เลือกรุ่น สี และความจุที่ต้องการ</p>
+          </div>
+
+          <!-- Grid container to show fields on left, real product image on right -->
+          <div class="device-selector-grid" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: start; margin-bottom: 8px;">
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+              <div class="form-group">
+                <label class="label">เลือกรุ่นสินค้า <span class="req">*</span></label>
+                <select id="sel-model" class="input input-select" onchange="onModelChange()">
+                  <option value="">— กรุณาเลือกรุ่น —</option>
+                </select>
+              </div>
+
+              <div id="color-section" class="form-group hidden">
+                <label class="label">เลือกสี <span class="req">*</span></label>
+                <div id="color-options" class="color-grid"></div>
+              </div>
+
+              <div id="storage-section" class="form-group hidden">
+                <label class="label">เลือกความจุ <span class="req">*</span></label>
+                <div id="storage-options" class="storage-grid"></div>
+              </div>
+            </div>
+
+            <!-- Beautiful dynamic photo preview -->
+            <div id="device-image-preview-box" class="hidden" style="width: 100%; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.18); border-radius: var(--radius-sm); border: 1px solid var(--card-border); padding: 20px; min-height: 250px; overflow: hidden; animation: fadeIn 0.4s ease;">
+              <img id="device-preview-img" src="" alt="Device Preview" style="max-width: 100%; max-height: 240px; object-fit: contain; filter: drop-shadow(0 8px 24px rgba(0,0,0,0.3));">
+            </div>
+          </div>
+
+          <div id="calculator-section" class="hidden">
+            <!-- Down Payment Slider -->
+            <div class="slider-group">
+              <div class="slider-header">
+                <span class="slider-label">💳 ปรับเงินดาวน์</span>
+                <span class="slider-val" id="slide-down-val">0 บาท</span>
+              </div>
+              <input type="range" id="slide-down" class="slider-input" min="0" max="10000" step="500" oninput="onCalculatorChange()">
+              <div class="slider-limits">
+                <span id="slide-down-min">0 บาท</span>
+                <span id="slide-down-max">10,000 บาท</span>
+              </div>
+            </div>
+
+            <!-- Installment chips selection -->
+            <div class="form-group" style="margin-top: 16px;">
+              <label class="label">เลือกจำนวนงวดที่ต้องการผ่อน</label>
+              <div class="installment-chips" id="inst-chips">
+                <div class="chip-btn active" data-months="6" onclick="selectInstallmentChip(6)">6 งวด</div>
+                <div class="chip-btn" data-months="9" onclick="selectInstallmentChip(9)">9 งวด</div>
+                <div class="chip-btn" data-months="12" onclick="selectInstallmentChip(12)">12 งวด</div>
+                <div class="chip-btn" data-months="18" onclick="selectInstallmentChip(18)">18 งวด</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="price-summary" class="price-box hidden">
+            <div class="price-box-title">
+              <span>📋 รายละเอียดการผ่อนชำระ</span>
+              <span class="auto-calc">(คำนวณอัตโนมัติ)</span>
+            </div>
+            <div class="price-row"><span>💰 ราคาสินค้า</span><strong id="ps-price">-</strong></div>
+            <div class="price-row accent"><span>💳 เงินดาวน์</span><strong id="ps-down">-</strong></div>
+            <div class="price-row"><span>📅 ค่างวดต่อเดือน</span><strong id="ps-monthly">-</strong></div>
+            <div class="price-row"><span>🔢 จำนวนงวด</span><strong id="ps-months">-</strong></div>
+            <div class="price-row"><span>📆 วันชำระ</span><strong id="ps-day">-</strong></div>
+            <div class="price-row total"><span>💵 ยอดรวมทั้งหมด</span><strong id="ps-total">-</strong></div>
+          </div>
+
+          <div class="card-actions">
+            <button class="btn btn-ghost" onclick="prevStep()"><span class="btn-arrow">←</span> ย้อนกลับ</button>
+            <button class="btn btn-primary" onclick="nextStep()">ถัดไป <span class="btn-arrow">→</span></button>
+          </div>
+        </div>
+
+        <!-- Right: Summary Panel -->
+        <div class="summary-panel">
+          <div class="card summary-card">
+            <div class="summary-device" id="summary-device">
+              <div class="device-placeholder" id="sum-device-img-wrap" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.1); border-radius: var(--radius-sm); overflow: hidden; margin: 0 auto 10px;">
+                <span class="device-placeholder-emoji" style="font-size: 40px;">📱</span>
+                <img id="sum-device-img" src="" alt="Device thumbnail" style="display: none; max-width: 100%; max-height: 100%; object-fit: contain; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2));">
+              </div>
+              <p class="summary-model-name" id="sum-model">เลือกสินค้า</p>
+              <p class="summary-variant-name" id="sum-variant">กรุณาเลือกรุ่น สี และความจุ</p>
+            </div>
+
+            <div id="sum-pricing" class="sum-pricing hidden">
+              <div class="sum-row"><span>ราคาสินค้า</span><strong id="sum-price">-</strong></div>
+              <div class="sum-row highlight"><span>เงินดาวน์</span><strong id="sum-down">-</strong></div>
+              <div class="sum-row"><span>ค่างวดต่อเดือน</span><strong id="sum-monthly">-</strong></div>
+              <div class="sum-row"><span>จำนวนงวด</span><strong id="sum-months">-</strong></div>
+              <div class="sum-row"><span>วันชำระ</span><strong id="sum-day">-</strong></div>
+            </div>
+
+            <div id="sum-includes" class="sum-includes hidden">
+              <p class="sum-includes-title">สิ่งที่จะได้รับ</p>
+              <ul>
+                <li>✅ ตัวเครื่อง <span id="sum-include-model"></span></li>
+                <li>✅ อุปกรณ์มาพร้อมกล่อง</li>
+                <li>✅ ประกัน 1 ปี</li>
+                <li>✅ บริการหลังการขายจากร้าน</li>
+              </ul>
+            </div>
+
+            <div class="sum-contact">
+              <p>❓ มีคำถาม? ติดต่อเรา</p>
+              <p>📞 <strong>080-146-5222</strong></p>
+              <p>📘 สบายโฟน บ้านไผ่</p>
+              <p>💬 Line : sabuyphon_bp</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 4 ── เงื่อนไขสัญญา ──────────────────────────────────── -->
+    <section class="step" id="step-4">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-step-badge">ขั้นตอน 4 จาก 5</div>
+          <h2 class="card-title">📜 เงื่อนไขสัญญา</h2>
+          <p class="card-subtitle">กรุณาอ่านเงื่อนไขให้ครบถ้วนก่อนยืนยัน</p>
+        </div>
+
+        <div class="terms-box">
+          <div class="term-item">
+            <div class="term-num">1</div>
+            <div>
+              <strong style="color: #fff; display: block; margin-bottom: 4px;">การชำระล่าช้าและการล็อกเครื่อง:</strong>
+              <p>หากมียอดค้างชำระครบ <strong>3 วัน</strong> ทางร้านมีสิทธิ์เปลี่ยนภาพพื้นหลัง (Wallpaper) ของเครื่องเพื่อแจ้งเตือนให้ชำระ</p>
+              <p style="margin-top: 6px;">หากค้างชำระครบ <strong>7 วัน</strong> ทางร้านมีสิทธิ์ระงับการใช้งานเครื่องชั่วคราว (ล็อกเครื่อง) และอาจเรียกเก็บค่าดำเนินการปลดล็อก <strong>300 บาท</strong></p>
+            </div>
+          </div>
+          <div class="term-item">
+            <div class="term-num">2</div>
+            <div>
+              <strong style="color: #fff; display: block; margin-bottom: 4px;">กรณีไม่ต้องการผ่อนต่อ:</strong>
+              <p>ลูกค้าสามารถส่งคืนเครื่องกับทางร้านได้ โดยสัญญาจะถูกยกเลิกทันทีและไม่มีการดำเนินคดีหรือแจ้งความใดๆ</p>
+            </div>
+          </div>
+          <div class="term-item">
+            <div class="term-num">3</div>
+            <div>
+              <strong style="color: #fff; display: block; margin-bottom: 4px;">เงื่อนไขการคืนเครื่องและเงินดาวน์:</strong>
+              <p>หากลูกค้าติดต่อคืนเครื่องด้วยตัวเองโดยสมัครใจ (ร้านไม่ต้องติดตามเครื่อง) ไม่มีค้างชำระค่างวด และเครื่องอยู่ในสภาพปกติสมบูรณ์ ไม่เสียหาย พัง หรือต้องซ่อม ทางร้านจะพิจารณาคืนเงินให้ **ไม่เกิน 50% ของเงินดาวน์** ตามผลการประเมินสภาพเครื่อง</p>
+            </div>
+          </div>
+          <div class="term-item">
+            <div class="term-num">4</div>
+            <div>
+              <strong style="color: #fff; display: block; margin-bottom: 4px;">ความยินยอมต่อระบบรักษาสิทธิ์:</strong>
+              <p>การดำเนินการตามเงื่อนไขทั้งหมดถือเป็นส่วนหนึ่งของระบบรักษาสิทธิ์ของทางร้าน ลูกค้ารับทราบและยินยอมปฏิบัติตามเงื่อนไขนี้โดยไม่มีข้อโต้แย้งใดๆ</p>
+            </div>
+          </div>
+        </div>
+
+        <label class="checkbox-wrap" for="chk-terms">
+          <input id="chk-terms" type="checkbox" class="chk-input">
+          <span class="chk-custom"></span>
+          <span class="chk-label">ข้าพเจ้าได้อ่านและยอมรับเงื่อนไขสัญญาข้างต้นทั้งหมดแล้ว</span>
+        </label>
+
+        <div class="card-actions">
+          <button class="btn btn-ghost" onclick="prevStep()"><span class="btn-arrow">←</span> ย้อนกลับ</button>
+          <button class="btn btn-primary" onclick="nextStep()">ถัดไป <span class="btn-arrow">→</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 5 ── ยืนยันตัวตนและเซ็นสัญญา ──────────────────────── -->
+    <section class="step" id="step-5">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-step-badge">ขั้นตอน 5 จาก 5</div>
+          <h2 class="card-title">✅ ยืนยันตัวตนและเซ็นสัญญา</h2>
+          <p class="card-subtitle">ขั้นตอนสุดท้าย — กรุณาเซ็นชื่อและยืนยัน OTP</p>
+        </div>
+
+        <div class="final-grid">
+          <!-- Signature -->
+          <div class="sig-section">
+            <h3 class="section-label">✍️ เซ็นลายมือชื่อ</h3>
+            <div class="sig-wrap">
+              <canvas id="sig-canvas"></canvas>
+              <p class="sig-hint">เซ็นชื่อในกรอบด้านบน</p>
+            </div>
+            <button class="btn btn-sm btn-outline" onclick="clearSig()">🗑️ ล้างลายเซ็น</button>
+          </div>
+
+          <!-- Selfie Preview -->
+          <div class="selfie-section">
+            <h3 class="section-label">📸 รูปเซลฟี่คู่บัตร</h3>
+            <div class="selfie-preview-box" id="selfie-box">
+              <span class="selfie-placeholder">รูปจะแสดงที่นี่</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- OTP -->
+        <div class="otp-section">
+          <h3 class="section-label">🔐 ยืนยัน OTP</h3>
+          <p class="otp-desc">ระบบจะส่งรหัส 6 หลักไปยัง <strong id="otp-phone">-</strong></p>
+          <div class="otp-send-row">
+            <button class="btn btn-outline" id="btn-send-otp" onclick="sendOTP()">📤 ส่ง OTP</button>
+            <span class="otp-timer" id="otp-timer"></span>
+          </div>
+          <div class="otp-boxes" id="otp-boxes" style="display:none">
+            <input type="tel" class="otp-box" maxlength="1" data-i="0">
+            <input type="tel" class="otp-box" maxlength="1" data-i="1">
+            <input type="tel" class="otp-box" maxlength="1" data-i="2">
+            <input type="tel" class="otp-box" maxlength="1" data-i="3">
+            <input type="tel" class="otp-box" maxlength="1" data-i="4">
+            <input type="tel" class="otp-box" maxlength="1" data-i="5">
+          </div>
+          <div id="otp-msg"></div>
+        </div>
+
+        <div class="card-actions">
+          <button class="btn btn-ghost" onclick="prevStep()"><span class="btn-arrow">←</span> ย้อนกลับ</button>
+          <button class="btn btn-submit" id="btn-submit" onclick="submitContract()" disabled>✅ ยืนยันและส่งสัญญา</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUCCESS ──────────────────────────────────────────────────── -->
+    <section class="step" id="step-success">
+      <div class="success-card">
+        <div class="success-anim">🎉</div>
+        <h2 class="success-title">ส่งสัญญาเรียบร้อยแล้ว!</h2>
+        <p class="success-sub">ขอบคุณที่ไว้วางใจ สบายโฟน บ้านไผ่</p>
+        <div class="success-contract-no">
+          <span>เลขที่สัญญา</span>
+          <strong id="res-contract-no">-</strong>
+        </div>
+        <div class="flow-steps">
+          <div class="flow-item"><div class="flow-icon">📋</div><p>ร้านตรวจสอบเอกสาร</p></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-item"><div class="flow-icon">📞</div><p>ร้านติดต่อกลับ</p></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-item"><div class="flow-icon">✅</div><p>อนุมัติสัญญา</p></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-item"><div class="flow-icon">📱</div><p>รับเครื่อง</p></div>
+        </div>
+        <div class="success-actions">
+          <button class="btn btn-ghost" onclick="location.reload()">ทำสัญญาใหม่</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── FOOTER ─────────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>📱 สบายโฟน บ้านไผ่</span>
+      <span>·</span>
+      <span>📞 080-146-5222</span>
+      <span>·</span>
+      <span>📘 สบายโฟน บ้านไผ่</span>
+      <span>·</span>
+      <span>💬 sabuyphon_bp</span>
+      <span>·</span>
+      <span>📍 ถนนขอนแก่น ตรงข้าม ปตท. บ้านไผ่ ขอนแก่น</span>
+    </div>
+  </footer>
+
+
+  <!-- Camera Modal Overlay -->
+  <div class="camera-modal" id="camera-modal" style="display:none">
+    <button class="camera-close" onclick="closeCamera()">✕</button>
+    <div class="camera-viewport-container">
+      <video id="camera-video" class="camera-video" autoplay playsinline></video>
+      <div class="camera-overlay-guide" id="camera-guide"></div>
+      <div class="camera-guide-text" id="camera-guide-text">จัดวางบัตรให้อยู่ในกรอบ</div>
+    </div>
+    <div class="camera-controls">
+      <button class="camera-switch" onclick="switchCamera()">🔄</button>
+      <button class="camera-shutter" onclick="capturePhoto()"></button>
+      <div style="width:24px"></div> <!-- spacer -->
+    </div>
+  </div>
+
+  <!-- OCR Scanner Modal Overlay -->
+  <div class="ocr-scan-modal" id="ocr-modal" style="display:none">
+    <div class="ocr-scan-box">
+      <img id="ocr-img" src="" alt="Scanning Card">
+      <div class="ocr-laser-line"></div>
+    </div>
+    <div class="ocr-status-text" id="ocr-title">กำลังสแกนบัตรประชาชนด้วย AI...</div>
+    <div class="ocr-sub-text" id="ocr-subtitle">ระบบกำลังดึงข้อมูลเพื่อกรอกฟอร์มให้อัตโนมัติ</div>
+  </div>
+
+  <!-- Status Tracking Modal -->
+  <div class="track-modal" id="track-modal" style="display:none">
+    <div class="track-card">
+      <div class="track-card-header">
+        <h3 class="track-card-title">🔍 ตรวจสอบสถานะสัญญา</h3>
+        <button class="track-close-btn" onclick="closeTrackModal()">✕</button>
+      </div>
+      <div class="track-card-body">
+        <div class="search-input-group">
+          <input type="tel" id="track-phone-input" class="input" placeholder="ป้อนเบอร์โทรศัพท์ที่ทำสัญญา" style="margin-bottom:0">
+          <button class="btn btn-primary" onclick="searchContracts()" style="white-space:nowrap;padding:10px 16px">ค้นหา</button>
+        </div>
+        <div id="track-results-container">
+          <p style="color:#64748b;text-align:center;margin-top:40px;">ป้อนเบอร์โทรศัพท์เพื่อค้นหาประวัติการทำสัญญาของคุณ</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <script src="/js/form.js"></script>
+  <script>
+    function updateClock() {
+      const el = document.getElementById('status-time');
+      if (el) {
+        const now = new Date();
+        el.textContent = now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', hour12: false });
+      }
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+</body>
+</html>
