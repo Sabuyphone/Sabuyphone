@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบจัดการร้านสบายโฟน บ้านไผ่ | Admin Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+  <!-- ── LOGIN OVERLAY ─────────────────────────────────────────── -->
+  <div id="login-overlay" class="login-overlay">
+    <div class="login-box">
+      <div style="text-align:center;">
+        <div style="width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,#8b5cf6,#6d28d9);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px;box-shadow:0 8px 24px rgba(139,92,246,0.4);">📱</div>
+        <h2 class="login-title">SABUYPHONE</h2>
+        <p class="login-sub">เข้าสู่ระบบจัดการร้านสบายโฟน บ้านไผ่</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <input type="password" id="login-pw" class="input" placeholder="กรอกรหัสผ่าน Admin" onkeydown="if(event.key==='Enter')doLogin()">
+        <button class="btn btn-primary" onclick="doLogin()" style="width:100%;justify-content:center;">🔓 เข้าสู่ระบบ</button>
+      </div>
+      <div id="login-err" class="login-err"></div>
+    </div>
+  </div>
+
+  <!-- ── APP SHELL ──────────────────────────────────────────────── -->
+  <div id="app" class="app hidden">
+    <div id="sidebar-overlay" class="sidebar-overlay hidden" onclick="toggleSidebar(event)"></div>
+
+    <!-- Sidebar Menu -->
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="sidebar-logo">
+          <img src="/logo.png" alt="SABUYPHONE" style="width:38px;height:38px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(139,92,246,0.5));">
+          <div>
+            <div class="sidebar-brand-title">SABUYPHONE</div>
+            <div class="sidebar-brand-sub">ร้านสบายโฟน บ้านไผ่</div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">เมนูหลัก</div>
+        <button class="nav-item active" data-page="dashboard" onclick="showPage('dashboard',this)">
+          <span class="nav-icon">📊</span> Dashboard
+        </button>
+        <button class="nav-item" data-page="contracts" onclick="showPage('contracts',this)">
+          <span class="nav-icon">👥</span> ลูกค้า & สัญญา
+          <span class="nav-badge" id="badge-pending">0</span>
+        </button>
+        <button class="nav-item" data-page="reminders" onclick="showPage('reminders',this)">
+          <span class="nav-icon">💳</span> การผ่อนชำระ
+          <span class="nav-badge" id="badge-due-count" style="background:#10b981;">0</span>
+        </button>
+        <button class="nav-item" data-page="products" onclick="showPage('products',this)">
+          <span class="nav-icon">📱</span> สินค้า / สต็อก
+        </button>
+        
+        <div class="nav-section-label">รายงาน & ตั้งค่า</div>
+        <button class="nav-item" data-page="reports" onclick="showPage('reports',this)">
+          <span class="nav-icon">📈</span> รายงาน
+        </button>
+        <button class="nav-item" data-page="notifications" onclick="showPage('notifications',this)">
+          <span class="nav-icon">🔔</span> การแจ้งเตือน <span class="nav-badge" style="background:#ef4444;">8</span>
+        </button>
+        <button class="nav-item" data-page="settings" onclick="showPage('settings',this)">
+          <span class="nav-icon">⚙️</span> ตั้งค่า
+        </button>
+      </nav>
+
+      <!-- Sidebar Quick Customer Link Widget -->
+      <div class="sidebar-promo-card" style="background:linear-gradient(135deg,rgba(139,92,246,0.12) 0%,rgba(99,102,241,0.12) 100%);border:1px solid rgba(139,92,246,0.3);text-align:left;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <span style="font-size:18px;">🌐</span>
+          <div class="sidebar-promo-title" style="font-size:12.5px;">หน้าทำสัญญาผ่อนออนไลน์</div>
+        </div>
+        <div class="sidebar-promo-sub" style="font-size:10.5px;margin-bottom:10px;line-height:1.3;">คัดลอกลิงก์ส่งให้ลูกค้าทำสัญญาผ่อนบนมือถือได้ทันที</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <button class="btn btn-sm btn-primary" style="width:100%;justify-content:center;font-size:11px;padding:6px 8px;" onclick="copyCustomerLink()">📋 คัดลอกลิงก์ส่งให้ลูกค้า</button>
+          <button class="btn btn-sm btn-outline" style="width:100%;justify-content:center;font-size:11px;padding:6px 8px;" onclick="window.open('/','_blank')">🚀 เปิดหน้าลูกค้า</button>
+        </div>
+      </div>
+
+      <div class="sidebar-bottom">
+        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#6d28d9);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:12px;">A</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:12.5px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">ผู้ดูแลระบบ</div>
+          <div style="font-size:10.5px;color:var(--text-muted);">Admin</div>
+        </div>
+        <button onclick="logout()" style="background:transparent;border:none;color:var(--text-muted);cursor:pointer;font-size:14px;" title="ออกจากระบบ">🚪</button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="content">
+
+      <!-- Topbar Header -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle" onclick="toggleSidebar(event)" style="display:none;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;width:38px;height:38px;align-items:center;justify-content:center;color:#fff;cursor:pointer;font-size:16px;">☰</button>
+          
+          <div class="header-search-bar">
+            <span style="color:var(--text-muted);font-size:14px;">🔍</span>
+            <input type="text" id="global-search" placeholder="ค้นหาลูกค้า, IMEI, เลขที่สัญญา..." oninput="onGlobalSearch(this.value)">
+            <span class="search-shortcut">Ctrl + K</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="date-badge-card">
+            <span style="font-size:18px;">📅</span>
+            <div class="date-badge-text">
+              <span class="date-badge-date" id="topbar-date-display">6 สิงหาคม 2568</span>
+              <span class="date-badge-time" id="topbar-time">16:45 น.</span>
+            </div>
+          </div>
+
+          <button class="topbar-icon-btn" onclick="toast('มีการแจ้งเตือนใหม่ 8 รายการ','info')" title="การแจ้งเตือน">
+            🔔 <span class="icon-badge-dot">8</span>
+          </button>
+          
+          <button class="topbar-icon-btn" onclick="toggleTheme()" id="theme-toggle-btn" title="เปลี่ยนสลับธีม">🌙</button>
+          
+          <div style="display:flex;align-items:center;gap:10px;padding-left:8px;border-left:1px solid var(--border);">
+            <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;box-shadow:0 0 10px rgba(139,92,246,0.4);">S</div>
+            <div>
+              <div style="font-size:12px;font-weight:800;color:#fff;">สบายโฟน บ้านไผ่</div>
+              <div style="font-size:10px;color:var(--text-muted);">Admin Panel</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- ── PAGE 1: DASHBOARD ──────────────────────────────────── -->
+      <div id="page-dashboard" class="page active">
+        
+        <!-- Welcome Greeting Header -->
+        <div class="welcome-header">
+          <div>
+            <h1 class="welcome-title">สวัสดีครับ, Admin 👋</h1>
+            <p class="welcome-sub">ยินดีต้อนรับกลับสู่ระบบจัดการร้านสบายโฟน บ้านไผ่</p>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button class="btn btn-outline" onclick="refreshAll()">🔄 รีเฟรชข้อมูล</button>
+            <button class="btn btn-primary" onclick="showPage('contracts')">➕ เพิ่มสัญญาใหม่</button>
+          </div>
+        </div>
+
+        <!-- Top 5 KPI Metric Cards -->
+        <div class="kpi-grid-5">
+          <!-- Card 1 -->
+          <div class="kpi-card kpi-purple">
+            <div class="kpi-top">
+              <div class="kpi-icon-box">💰</div>
+              <span class="kpi-label">ยอดขายวันนี้</span>
+            </div>
+            <div>
+              <div class="kpi-val" id="st-revenue-today">35,780<span class="kpi-val-unit">บาท</span></div>
+              <div class="kpi-bottom trend-up"><span>↑ 12.5%</span> <span style="color:var(--text-muted);font-weight:500;">จากเมื่อวาน</span></div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="kpi-card kpi-blue">
+            <div class="kpi-top">
+              <div class="kpi-icon-box">👥</div>
+              <span class="kpi-label">ลูกค้าทั้งหมด</span>
+            </div>
+            <div>
+              <div class="kpi-val" id="st-total">2,156<span class="kpi-val-unit">ราย</span></div>
+              <div class="kpi-bottom trend-up"><span>↑ 8.2%</span> <span style="color:var(--text-muted);font-weight:500;">เดือนนี้</span></div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="kpi-card kpi-amber">
+            <div class="kpi-top">
+              <div class="kpi-icon-box">⏳</div>
+              <span class="kpi-label">ค้างชำระ</span>
+            </div>
+            <div>
+              <div class="kpi-val" id="st-pending">12<span class="kpi-val-unit">ราย</span></div>
+              <div class="kpi-bottom trend-down"><span>↑ 3 ราย</span> <span style="color:var(--text-muted);font-weight:500;">ต้องติดตาม</span></div>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="kpi-card kpi-rose">
+            <div class="kpi-top">
+              <div class="kpi-icon-box">📦</div>
+              <span class="kpi-label">สินค้าคงเหลือ</span>
+            </div>
+            <div>
+              <div class="kpi-val" id="st-stock">128<span class="kpi-val-unit">รายการ</span></div>
+              <div class="kpi-bottom" style="color:#fbbf24;"><span>12 ใกล้หมด</span></div>
+            </div>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="kpi-card kpi-emerald">
+            <div class="kpi-top">
+              <div class="kpi-icon-box">📈</div>
+              <span class="kpi-label">กำไรสุทธิ (เดือนนี้)</span>
+            </div>
+            <div>
+              <div class="kpi-val" id="st-profit">128,450<span class="kpi-val-unit">บาท</span></div>
+              <div class="kpi-bottom trend-up"><span>↑ 15.3%</span> <span style="color:var(--text-muted);font-weight:500;">จากเดือนที่แล้ว</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Middle Widgets Row -->
+        <div class="middle-widgets-grid">
+          <!-- Widget 1: Sales Overview Area Chart -->
+          <div class="widget-card">
+            <div class="widget-header">
+              <div class="card-title-text">📊 ภาพรวมยอดขาย</div>
+              <select class="input input-sm" style="padding:4px 10px;font-size:11px;" onchange="toast('อัปเดตช่วงเวลาแล้ว','ok')">
+                <option value="7">7 วันที่ผ่านมา</option>
+                <option value="30">30 วันที่ผ่านมา</option>
+              </select>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--text-muted);">ยอดขายรวม</div>
+              <div style="font-size:22px;font-weight:800;color:#fff;">251,680 <span style="font-size:12px;color:#34d399;font-weight:700;">↑ 15.3%</span> <span style="font-size:11px;color:var(--text-muted);font-weight:500;">จาก 7 วันที่แล้ว</span></div>
+            </div>
+
+            <!-- Canvas Line Chart -->
+            <div class="sales-chart-wrap" style="margin-top:12px;">
+              <canvas id="chart-sales" width="450" height="180"></canvas>
+            </div>
+
+            <div class="sales-sub-stats">
+              <div class="sub-stat-item">
+                <div class="sub-stat-label">เงินดาวน์</div>
+                <div class="sub-stat-val" style="color:#a78bfa;">78,900 บาท <span style="font-size:10px;color:var(--text-muted);">31%</span></div>
+              </div>
+              <div class="sub-stat-item">
+                <div class="sub-stat-label">ค่างวด</div>
+                <div class="sub-stat-val" style="color:#60a5fa;">142,780 บาท <span style="font-size:10px;color:var(--text-muted);">57%</span></div>
+              </div>
+              <div class="sub-stat-item">
+                <div class="sub-stat-label">อุปกรณ์เสริม</div>
+                <div class="sub-stat-val" style="color:#34d399;">30,000 บาท <span style="font-size:10px;color:var(--text-muted);">12%</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Widget 2: Payment Status Donut Chart -->
+          <div class="widget-card">
+            <div class="widget-header">
+              <div class="card-title-text">🍩 สถานะการชำระเงิน</div>
+            </div>
+            
+            <div class="donut-chart-wrap">
+              <canvas id="chart-donut" width="160" height="160"></canvas>
+              <div class="donut-center-text">
+                <div class="donut-val">2,156</div>
+                <div class="donut-sub">ลูกค้าทั้งหมด</div>
+              </div>
+            </div>
+
+            <div class="donut-legend">
+              <div class="legend-row">
+                <div class="legend-left"><div class="legend-dot" style="background:#10b981;"></div><span>ปกติ</span></div>
+                <div><strong>1,763 ราย</strong> <span style="color:var(--text-muted);font-size:10.5px;">81.7%</span></div>
+              </div>
+              <div class="legend-row">
+                <div class="legend-left"><div class="legend-dot" style="background:#f59e0b;"></div><span>ค้างชำระ</span></div>
+                <div><strong>12 ราย</strong> <span style="color:var(--text-muted);font-size:10.5px;">0.6%</span></div>
+              </div>
+              <div class="legend-row">
+                <div class="legend-left"><div class="legend-dot" style="background:#3b82f6;"></div><span>ใกล้ครบกำหนด</span></div>
+                <div><strong>24 ราย</strong> <span style="color:var(--text-muted);font-size:10.5px;">1.1%</span></div>
+              </div>
+              <div class="legend-row">
+                <div class="legend-left"><div class="legend-dot" style="background:#8b5cf6;"></div><span>ปิดบัญชีแล้ว</span></div>
+                <div><strong>357 ราย</strong> <span style="color:var(--text-muted);font-size:10.5px;">16.6%</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Widget 3: Notifications & Quick Actions -->
+          <div class="widget-card">
+            <div class="widget-header">
+              <div class="card-title-text">⚡ เมนูด่วน & แจ้งเตือน</div>
+            </div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:8px;">เมนูด่วน</div>
+            <div class="quick-actions-grid" style="margin-bottom:16px;">
+              <button class="quick-act-btn" onclick="showPage('contracts')"><span>👤+</span><span>เพิ่มลูกค้า</span></button>
+              <button class="quick-act-btn" onclick="showPage('products')"><span>🛒</span><span>เพิ่มการขาย</span></button>
+              <button class="quick-act-btn" onclick="toast('ระบบสแกน IMEI พร้อมใช้งาน','info')"><span>📱</span><span>สแกน IMEI</span></button>
+              <button class="quick-act-btn" onclick="showPage('contracts')"><span>🖨️</span><span>พิมพ์สัญญา</span></button>
+            </div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:8px;">การแจ้งเตือนล่าสุด</div>
+            <div class="notif-list">
+              <div class="notif-item">
+                <div class="notif-icon" style="background:rgba(239,68,68,0.2);color:#ef4444;">🚨</div>
+                <div>
+                  <div class="notif-title">ค้างชำระเกิน 7 วัน (5 ราย)</div>
+                  <div class="notif-sub">2 นาทีที่แล้ว</div>
+                </div>
+              </div>
+              <div class="notif-item">
+                <div class="notif-icon" style="background:rgba(245,158,11,0.2);color:#fbbf24;">⏳</div>
+                <div>
+                  <div class="notif-title">ใกล้ครบกำหนดชำระ (12 ราย)</div>
+                  <div class="notif-sub">1 ชั่วโมงที่แล้ว</div>
+                </div>
+              </div>
+              <div class="notif-item">
+                <div class="notif-icon" style="background:rgba(16,185,129,0.2);color:#34d399;">✅</div>
+                <div>
+                  <div class="notif-title">ชำระเงินสำเร็จ (นายสมชาย)</div>
+                  <div class="notif-sub">3 ชั่วโมงที่แล้ว</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Row Widgets -->
+        <div class="bottom-widgets-grid">
+          <!-- Left: Recent Customers Table -->
+          <div class="widget-card" style="padding:0;overflow:hidden;">
+            <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+              <div class="card-title-text">👥 ลูกค้าล่าสุด</div>
+              <button class="btn btn-sm btn-outline" onclick="showPage('contracts')">ดูทั้งหมด →</button>
+            </div>
+            
+            <div class="contract-table-wrap">
+              <table class="contract-table">
+                <thead>
+                  <tr>
+                    <th>ลูกค้า</th><th>สินค้า</th><th>งวดล่าสุด</th><th>สถานะ</th><th>ยอดค้างชำระ</th><th>จัดการ</th>
+                  </tr>
+                </thead>
+                <tbody id="dash-tbody">
+                  <!-- Filled dynamically by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Right: Top Selling Products List -->
+          <div class="widget-card">
+            <div class="widget-header">
+              <div class="card-title-text">🔥 สินค้าขายดี</div>
+              <button class="btn btn-sm btn-outline" onclick="showPage('products')">ดูทั้งหมด</button>
+            </div>
+
+            <div class="top-selling-list">
+              <div class="top-selling-item">
+                <div class="top-selling-left">
+                  <span class="top-selling-rank">1</span>
+                  <img src="/iphone16promax.png" alt="iPhone 15 Pro Max" class="top-selling-img" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\'><rect width=\\'100%\\' height=\\'100%\\' fill=\\'%23333\\'></rect></svg>'">
+                  <div>
+                    <div class="top-selling-name">iPhone 15 Pro Max</div>
+                    <div style="font-size:11px;color:var(--text-muted);">256GB • Titanium</div>
+                  </div>
+                </div>
+                <span class="top-selling-count">32 เครื่อง</span>
+              </div>
+
+              <div class="top-selling-item">
+                <div class="top-selling-left">
+                  <span class="top-selling-rank">2</span>
+                  <div style="width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;font-size:18px;">📱</div>
+                  <div>
+                    <div class="top-selling-name">iPhone 15</div>
+                    <div style="font-size:11px;color:var(--text-muted);">128GB • Black</div>
+                  </div>
+                </div>
+                <span class="top-selling-count">28 เครื่อง</span>
+              </div>
+
+              <div class="top-selling-item">
+                <div class="top-selling-left">
+                  <span class="top-selling-rank">3</span>
+                  <div style="width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;font-size:18px;">📱</div>
+                  <div>
+                    <div class="top-selling-name">iPhone 14</div>
+                    <div style="font-size:11px;color:var(--text-muted);">128GB • Starlight</div>
+                  </div>
+                </div>
+                <span class="top-selling-count">18 เครื่อง</span>
+              </div>
+
+              <div class="top-selling-item">
+                <div class="top-selling-left">
+                  <span class="top-selling-rank">4</span>
+                  <div style="width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;font-size:18px;">📱</div>
+                  <div>
+                    <div class="top-selling-name">iPad Gen 11</div>
+                    <div style="font-size:11px;color:var(--text-muted);">64GB • Space Gray</div>
+                  </div>
+                </div>
+                <span class="top-selling-count">15 เครื่อง</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── PAGE 2: CONTRACTS ──────────────────────────────────── -->
+      <div id="page-contracts" class="page">
+        <div class="toolbar">
+          <div class="filter-tabs">
+            <button class="filter-tab active" data-status="all" onclick="filterContracts('all',this)">ทั้งหมด</button>
+            <button class="filter-tab" data-status="pending" onclick="filterContracts('pending',this)">รอดำเนินการ</button>
+            <button class="filter-tab" data-status="approved" onclick="filterContracts('approved',this)">อนุมัติแล้ว</button>
+            <button class="filter-tab" data-status="rejected" onclick="filterContracts('rejected',this)">ปฏิเสธ</button>
+          </div>
+          <div class="search-box" style="display:flex;gap:10px;align-items:center;">
+            <input id="search-input" type="text" class="input input-sm" placeholder="🔍 ค้นหาชื่อ / เลขสัญญา / เบอร์..." oninput="searchContracts()">
+            <button class="btn btn-outline btn-sm" style="white-space:nowrap;border-color:rgba(16,185,129,0.4);color:#34d399;" onclick="exportContractsCSV()">📊 ส่งออก Excel</button>
+          </div>
+        </div>
+        <div class="contract-table-wrap">
+          <table class="contract-table">
+            <thead>
+              <tr>
+                <th>เลขสัญญา</th><th>ชื่อลูกค้า</th><th>เบอร์โทร</th><th>สินค้า</th><th>สี/ความจุ</th><th>ราคา</th><th>วันที่สร้าง</th><th>สถานะ</th><th>จัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="contracts-tbody"></tbody>
+          </table>
+          <div id="contracts-empty" class="empty-state hidden">ไม่พบสัญญา</div>
+        </div>
+      </div>
+
+      <!-- ── PAGE 3: REMINDERS ──────────────────────────────────── -->
+      <div id="page-reminders" class="page">
+        <div class="toolbar">
+          <div class="filter-tabs">
+            <button class="filter-tab active" data-rem-filter="all" onclick="filterReminders('all',this)">ทั้งหมด</button>
+            <button class="filter-tab" data-rem-filter="due-today" onclick="filterReminders('due-today',this)">📅 ถึงกำหนดวันนี้</button>
+            <button class="filter-tab" data-rem-filter="due-3days" onclick="filterReminders('due-3days',this)">⏳ ถึงกำหนดใน 3 วัน</button>
+          </div>
+          <div class="search-box">
+            <input id="reminder-search-input" type="text" class="input input-sm" placeholder="🔍 ค้นหาชื่อ / เลขสัญญา / เบอร์..." oninput="filterRemindersList()">
+          </div>
+        </div>
+        <div class="contract-table-wrap">
+          <table class="contract-table">
+            <thead>
+              <tr>
+                <th>เลขสัญญา</th><th>ชื่อลูกค้า</th><th>เบอร์โทร</th><th>สินค้า</th><th>ค่างวดต่อเดือน</th><th>กำหนดชำระ</th><th>งวดผ่อนไปแล้ว</th><th>แจ้งเตือน</th>
+              </tr>
+            </thead>
+            <tbody id="reminders-tbody"></tbody>
+          </table>
+          <div id="reminders-empty" class="empty-state hidden">ไม่พบรายการตามค่างวด</div>
+        </div>
+      </div>
+
+      <!-- ── PAGE 4: PRODUCTS ──────────────────────────────────── -->
+      <div id="page-products" class="page">
+        <div class="toolbar" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="showAddProductModal()">➕ เพิ่มสินค้า</button>
+          <div style="display:flex;gap:10px;flex:1;max-width:500px;">
+            <input id="product-search-input" type="text" class="input input-sm" placeholder="🔍 ค้นหารุ่นสินค้า / สี / ความจุ..." oninput="filterProductsList()" style="flex:1;">
+            <select id="product-brand-filter" class="input input-sm input-select" onchange="filterProductsList()" style="width:120px;">
+              <option value="all">ทุกแบรนด์</option>
+              <option value="Apple">Apple</option>
+              <option value="Samsung">Samsung</option>
+              <option value="Xiaomi">Xiaomi</option>
+              <option value="Oppo">Oppo</option>
+              <option value="Vivo">Vivo</option>
+              <option value="Realme">Realme</option>
+            </select>
+          </div>
+        </div>
+        <div class="contract-table-wrap">
+          <table class="contract-table">
+            <thead>
+              <tr>
+                <th>แบรนด์</th><th>รุ่น</th><th>สี</th><th>ความจุ</th><th>ราคา</th><th>เงินดาวน์</th><th>ค่างวด/เดือน</th><th>จำนวนงวด</th><th>จัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="products-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── PAGE 5: REPORTS ───────────────────────────────────── -->
+      <div id="page-reports" class="page">
+        <div class="welcome-header" style="margin-bottom:20px;">
+          <div>
+            <h2 class="welcome-title" style="font-size:22px;">📈 รายงานการขายและสรุปงบการเงิน</h2>
+            <p class="welcome-sub">รายงานการผ่อนชำระ รายรับรายจ่าย และยอดขายสินค้าประจำร้าน</p>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <select id="report-timeframe" class="input input-sm" onchange="loadReportsData()" style="padding:6px 12px;">
+              <option value="30">30 วันล่าสุด</option>
+              <option value="7">7 วันล่าสุด</option>
+              <option value="month">เดือนนี้</option>
+              <option value="all">ทั้งหมด</option>
+            </select>
+            <button class="btn btn-primary btn-sm" onclick="exportContractsCSV()">📊 ดาวน์โหลดรายงาน Excel</button>
+          </div>
+        </div>
+
+        <div class="kpi-grid-5" style="grid-template-columns: repeat(4, 1fr);margin-bottom:24px;">
+          <div class="kpi-card kpi-purple">
+            <div class="kpi-top"><div class="kpi-icon-box">💰</div><span class="kpi-label">ยอดขายสินค้ารวม</span></div>
+            <div class="kpi-val" id="rep-total-sales">251,680<span class="kpi-val-unit">บาท</span></div>
+          </div>
+          <div class="kpi-card kpi-blue">
+            <div class="kpi-top"><div class="kpi-icon-box">💵</div><span class="kpi-label">เงินดาวน์รับชำระแล้ว</span></div>
+            <div class="kpi-val" id="rep-down-collected">78,900<span class="kpi-val-unit">บาท</span></div>
+          </div>
+          <div class="kpi-card kpi-emerald">
+            <div class="kpi-top"><div class="kpi-icon-box">💳</div><span class="kpi-label">ค่างวดที่เก็บได้สำเร็จ</span></div>
+            <div class="kpi-val" id="rep-install-collected">142,780<span class="kpi-val-unit">บาท</span></div>
+          </div>
+          <div class="kpi-card kpi-amber">
+            <div class="kpi-top"><div class="kpi-icon-box">⏳</div><span class="kpi-label">ยอดหนี้คงเหลือรอเก็บ</span></div>
+            <div class="kpi-val" id="rep-pending-balance">30,000<span class="kpi-val-unit">บาท</span></div>
+          </div>
+        </div>
+
+        <div class="widget-card" style="margin-bottom:24px;">
+          <div class="widget-header">
+            <div class="card-title-text">📊 รายงานสรุปรายการผ่อนชำระแยกรายวัน/เดือน</div>
+          </div>
+          <div class="contract-table-wrap">
+            <table class="contract-table">
+              <thead>
+                <tr>
+                  <th>ช่วงเวลา / วันที่</th><th>จำนวนสัญญาใหม่</th><th>เงินดาวน์รวม</th><th>ค่างวดรับชำระ</th><th>ยอดขายรวม</th><th>สถานะการเก็บเงิน</th>
+                </tr>
+              </thead>
+              <tbody id="reports-tbody">
+                <tr>
+                  <td><strong>ประจำเดือน สิงหาคม 2568</strong></td>
+                  <td>12 สัญญา</td>
+                  <td style="color:#60a5fa;font-weight:700;">48,900 บาท</td>
+                  <td style="color:#34d399;font-weight:700;">92,000 บาท</td>
+                  <td style="color:#fff;font-weight:800;">140,900 บาท</td>
+                  <td><span class="badge badge-green">✓ ปกติ 96%</span></td>
+                </tr>
+                <tr>
+                  <td><strong>ประจำเดือน กรกฎาคม 2568</strong></td>
+                  <td>18 สัญญา</td>
+                  <td style="color:#60a5fa;font-weight:700;">62,000 บาท</td>
+                  <td style="color:#34d399;font-weight:700;">115,000 บาท</td>
+                  <td style="color:#fff;font-weight:800;">177,000 บาท</td>
+                  <td><span class="badge badge-green">✓ ปกติ 98%</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PAGE 6: NOTIFICATIONS ───────────────────────────────── -->
+      <div id="page-notifications" class="page">
+        <div class="welcome-header" style="margin-bottom:20px;">
+          <div>
+            <h2 class="welcome-title" style="font-size:22px;">🔔 ศูนย์การแจ้งเตือนระบบ</h2>
+            <p class="welcome-sub">แจ้งเตือนสัญญาค้างชำระ สต็อกสินค้าใกล้หมด และรายการอัปเดตสำคัญ</p>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="toast('ทำเครื่องหมายอ่านทั้งหมดเรียบร้อย','ok')">✅ ทำเครื่องหมายอ่านทั้งหมดแล้ว</button>
+        </div>
+
+        <div class="toolbar" style="margin-bottom:20px;">
+          <div class="filter-tabs">
+            <button class="filter-tab active" onclick="filterNotif('all',this)">ทั้งหมด</button>
+            <button class="filter-tab" onclick="filterNotif('due',this)">🚨 ค้างชำระ</button>
+            <button class="filter-tab" onclick="filterNotif('stock',this)">📦 สต็อกสินค้า</button>
+            <button class="filter-tab" onclick="filterNotif('approved',this)">✅ สัญญาใหม่</button>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px;" id="notif-full-list">
+          <div class="widget-card" style="padding:16px 20px;border-left:4px solid #ef4444;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div style="display:flex;gap:14px;align-items:center;">
+                <div style="width:40px;height:40px;border-radius:10px;background:rgba(239,68,68,0.2);color:#ef4444;display:flex;align-items:center;justify-content:center;font-size:20px;">🚨</div>
+                <div>
+                  <div style="font-size:14px;font-weight:800;color:#fff;">สัญญาค้างชำระเกิน 7 วัน (5 รายการ)</div>
+                  <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">ลูกค้า นายสมชาย ใจดี, นายวิชาญ รักดี ครบกำหนดเมื่อวันที่ 1 ส.ค. 68 ยอดรวม 14,500 บาท</div>
+                </div>
+              </div>
+              <button class="btn btn-sm btn-primary" onclick="showPage('reminders')">📲 ไปที่แท็บติดตามค่างวด</button>
+            </div>
+          </div>
+
+          <div class="widget-card" style="padding:16px 20px;border-left:4px solid #f59e0b;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div style="display:flex;gap:14px;align-items:center;">
+                <div style="width:40px;height:40px;border-radius:10px;background:rgba(245,158,11,0.2);color:#fbbf24;display:flex;align-items:center;justify-content:center;font-size:20px;">⏳</div>
+                <div>
+                  <div style="font-size:14px;font-weight:800;color:#fff;">ถึงกำหนดชำระค่างวดใน 3 วัน (12 รายการ)</div>
+                  <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">เตรียมส่งข้อความคัดลอกแจ้งเตือนลูกค้าใน LINE Official</div>
+                </div>
+              </div>
+              <button class="btn btn-sm btn-outline" onclick="showPage('reminders')">ดูรายการทั้งหมด</button>
+            </div>
+          </div>
+
+          <div class="widget-card" style="padding:16px 20px;border-left:4px solid #3b82f6;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div style="display:flex;gap:14px;align-items:center;">
+                <div style="width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,0.2);color:#60a5fa;display:flex;align-items:center;justify-content:center;font-size:20px;">📦</div>
+                <div>
+                  <div style="font-size:14px;font-weight:800;color:#fff;">สต็อกสินค้าใกล้หมด (2 รายการ)</div>
+                  <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">iPhone 16 Pro Max 256GB Desert Titanium เหลือในสต็อก 2 เครื่อง</div>
+                </div>
+              </div>
+              <button class="btn btn-sm btn-outline" onclick="showPage('products')">📱 จัดการสต็อก</button>
+            </div>
+          </div>
+
+          <div class="widget-card" style="padding:16px 20px;border-left:4px solid #10b981;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div style="display:flex;gap:14px;align-items:center;">
+                <div style="width:40px;height:40px;border-radius:10px;background:rgba(16,185,129,0.2);color:#34d399;display:flex;align-items:center;justify-content:center;font-size:20px;">✅</div>
+                <div>
+                  <div style="font-size:14px;font-weight:800;color:#fff;">อนุมัติสัญญาใหม่สำเร็จ (SP2608030002)</div>
+                  <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">ส่งข้อมูลสัญญาเข้า Google Sheet ทันทีเรียบร้อยแล้ว</div>
+                </div>
+              </div>
+              <button class="btn btn-sm btn-outline" onclick="showPage('contracts')">ดูรายละเอียดสัญญา</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PAGE 7: SETTINGS ───────────────────────────────────── -->
+      <div id="page-settings" class="page">
+        <div class="welcome-header" style="margin-bottom:20px;">
+          <div>
+            <h2 class="welcome-title" style="font-size:22px;">⚙️ การตั้งค่าระบบร้านค้า</h2>
+            <p class="welcome-sub">ตั้งค่าโปรไฟล์ร้านค้า การเชื่อมต่อ Webhook และความปลอดภัยของแอดมิน</p>
+          </div>
+          <button class="btn btn-primary" onclick="saveSystemSettings()">💾 บันทึกการตั้งค่าทั้งหมด</button>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+          <!-- Shop Info Setup -->
+          <div class="widget-card">
+            <div class="widget-header"><div class="card-title-text">🏪 ข้อมูลร้านค้า</div></div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div class="form-group">
+                <label class="label">ชื่อร้านค้า</label>
+                <input type="text" id="set-shop-name" class="input" value="ร้านสบายโฟน บ้านไผ่">
+              </div>
+              <div class="form-group">
+                <label class="label">เบอร์โทรศัพท์ร้าน</label>
+                <input type="text" id="set-shop-phone" class="input" value="081-234-5678">
+              </div>
+              <div class="form-group">
+                <label class="label">LINE Official Account ID</label>
+                <input type="text" id="set-shop-line" class="input" value="@sabuyphone">
+              </div>
+              <div class="form-group">
+                <label class="label">ที่อยู่ตั้งร้านค้า</label>
+                <textarea id="set-shop-address" class="input" style="height:70px;resize:none;">123 ถ.เจนจบทิศ ต.บ้านไผ่ อ.บ้านไผ่ จ.ขอนแก่น 40110</textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Installments & Contract Setup -->
+          <div class="widget-card">
+            <div class="widget-header"><div class="card-title-text">💳 ตั้งค่าการผ่อนชำระ & สัญญา</div></div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div class="form-group">
+                <label class="label">วันกำหนดชำระงวดตั้งต้นของเดือน</label>
+                <input type="number" id="set-default-payday" class="input" value="15">
+              </div>
+              <div class="form-group">
+                <label class="label">จำนวนงวดมาตรฐาน (งวด)</label>
+                <input type="number" id="set-default-installments" class="input" value="6">
+              </div>
+              <div class="form-group">
+                <label class="label">คำเตือนแจ้งในข้อความเตือนชำระ</label>
+                <input type="text" id="set-reminder-note" class="input" value="ชำระแล้วแจ้งสลิปใน LINE นี้ได้เลยครับ ขอบคุณครับ 🙏">
+              </div>
+            </div>
+          </div>
+
+          <!-- Integrations Setup -->
+          <div class="widget-card" style="grid-column:1/-1;">
+            <div class="widget-header"><div class="card-title-text">🔗 การเชื่อมต่อระบบภายนอก (Google Sheet & LINE)</div></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+              <div class="form-group">
+                <label class="label">Google Sheet Webhook URL (รับข้อมูลทำสัญญา Real-time)</label>
+                <input type="text" id="set-gsheet-url" class="input" value="https://script.google.com/macros/s/AKfycbzpmYUBlFmjbeTYuPnKpHNOWRdz-L_pqRY3jmhr3zur4si3lzh--1X2ZPWtputHbOy-/exec">
+                <button class="btn btn-outline btn-sm" style="margin-top:6px;width:fit-content;" onclick="testGoogleSheetSync()">🔄 ทดสอบซิงค์ข้อมูล Google Sheet</button>
+              </div>
+              <div class="form-group">
+                <label class="label">LINE Notify / Webhook Access Token</label>
+                <input type="password" id="set-line-token" class="input" placeholder="กรอก LINE Token สำหรับส่งแจ้งเตือนแอดมิน">
+                <button class="btn btn-outline btn-sm" style="margin-top:6px;width:fit-content;" onclick="toast('ส่งข้อความทดสอบ LINE เรียบร้อย!','ok')">🔔 ทดสอบส่ง LINE</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /app -->
+
+  <!-- ── CONTRACT DETAIL MODAL ─────────────────────────────────── -->
+  <div id="modal-overlay" class="modal-overlay hidden" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="modal-title">รายละเอียดสัญญา</h3>
+          <p class="modal-sub" id="modal-sub" style="font-size:12px;color:var(--text-muted);"></p>
+        </div>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+      <div class="modal-footer" id="modal-footer"></div>
+    </div>
+  </div>
+
+  <!-- ── ADD/EDIT PRODUCT MODAL ────────────────────────────────── -->
+  <div id="add-product-overlay" class="modal-overlay hidden" onclick="if(event.target===this)closeAddProduct()">
+    <div class="modal" style="max-width:500px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="ap-modal-title">📦 เพิ่มสินค้าใหม่</h3>
+        <button class="modal-close" onclick="closeAddProduct()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="form-group">
+            <label class="label">แบรนด์สินค้า <span class="req">*</span></label>
+            <select id="ap-brand" class="input input-select">
+              <option value="Apple">Apple</option>
+              <option value="Samsung">Samsung</option>
+              <option value="Xiaomi">Xiaomi</option>
+              <option value="Oppo">Oppo</option>
+              <option value="Vivo">Vivo</option>
+              <option value="Realme">Realme</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="label">รุ่นสินค้า <span class="req">*</span></label>
+            <input id="ap-model" type="text" class="input" placeholder="เช่น iPhone 16 Pro Max">
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;">
+          <div class="form-group">
+            <label class="label">สีสินค้า <span class="req">*</span></label>
+            <input id="ap-color" type="text" class="input" placeholder="เช่น Desert Titanium">
+          </div>
+          <div class="form-group">
+            <label class="label">รหัสสี Hex</label>
+            <input id="ap-color-hex" type="color" class="input" style="height:38px;padding:2px;cursor:pointer;" value="#8b5cf6">
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;">
+          <div class="form-group">
+            <label class="label">ความจุ <span class="req">*</span></label>
+            <input id="ap-storage" type="text" class="input" placeholder="เช่น 256GB">
+          </div>
+          <div class="form-group">
+            <label class="label">ราคาสินค้า (บาท) <span class="req">*</span></label>
+            <input id="ap-price" type="number" class="input" placeholder="ราคาสินค้า">
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;">
+          <div class="form-group">
+            <label class="label">เงินดาวน์ (บาท) <span class="req">*</span></label>
+            <input id="ap-down" type="number" class="input" placeholder="เงินดาวน์">
+          </div>
+          <div class="form-group">
+            <label class="label">ค่างวด/เดือน (บาท) <span class="req">*</span></label>
+            <input id="ap-monthly" type="number" class="input" placeholder="ค่างวดต่อเดือน">
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;">
+          <div class="form-group">
+            <label class="label">จำนวนงวดผ่อน</label>
+            <input id="ap-installments" type="number" class="input" value="6" placeholder="6">
+          </div>
+          <div class="form-group">
+            <label class="label">วันชำระงวดในเดือน</label>
+            <input id="ap-payday" type="number" class="input" value="15" placeholder="15">
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:8px;">
+          <label class="label">รูปภาพสินค้า (อัปโหลด หรือ วาง URL)</label>
+          <div style="display:flex;gap:8px;">
+            <input id="ap-image-path" type="text" class="input" placeholder="/uploads/product.jpg หรือ URL" style="flex:1;">
+            <label class="btn btn-outline btn-sm" style="margin:0;cursor:pointer;white-space:nowrap;">
+              📂 อัปโหลด
+              <input type="file" id="ap-image-file" accept="image/*" style="display:none;" onchange="handleProductImageUpload(this)">
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeAddProduct()">ยกเลิก</button>
+        <button class="btn btn-primary" id="ap-submit-btn" onclick="submitAddProduct()">💾 บันทึกสินค้า</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lightbox Overlay for Document Zoom -->
+  <div id="lightbox-overlay" class="modal-overlay hidden" onclick="closeLightbox()" style="z-index:9999;">
+    <div style="position:relative;max-width:90vw;max-height:90vh;display:flex;flex-direction:column;align-items:center;">
+      <button class="modal-close" onclick="closeLightbox()" style="position:absolute;top:-40px;right:0;color:#fff;background:rgba(255,255,255,0.2);font-size:18px;">✕</button>
+      <img id="lightbox-img" src="" alt="Document Preview" style="max-width:90vw;max-height:80vh;object-fit:contain;border-radius:12px;box-shadow:0 20px 50px rgba(0,0,0,0.8);border:1px solid rgba(255,255,255,0.2);">
+      <p id="lightbox-caption" style="margin-top:12px;color:#fff;font-size:14px;font-weight:700;background:rgba(0,0,0,0.6);padding:6px 16px;border-radius:99px;"></p>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" style="position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:10px;pointer-events:none;"></div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>
