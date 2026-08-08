@@ -22,22 +22,22 @@ app.use(express.static(__dirname));
 
 app.get('/', (req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  const publicIdx = path.join(__dirname, 'public', 'index.html');
   const rootIdx   = path.join(__dirname, 'index.html');
+  const publicIdx = path.join(__dirname, 'public', 'index.html');
   const sabuyIdx  = path.join(__dirname, 'Sabuyphone');
-  if (fs.existsSync(publicIdx)) return res.sendFile(publicIdx);
   if (fs.existsSync(rootIdx))   return res.sendFile(rootIdx);
+  if (fs.existsSync(publicIdx)) return res.sendFile(publicIdx);
   if (fs.existsSync(sabuyIdx))  return res.sendFile(sabuyIdx);
   res.send('Sabuyphone Online Contract System Ready');
 });
 
 app.get('/admin', (req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  const publicAdm = path.join(__dirname, 'public', 'admin.html');
   const rootAdm   = path.join(__dirname, 'admin.html');
+  const publicAdm = path.join(__dirname, 'public', 'admin.html');
   const sabuyAdm  = path.join(__dirname, 'admin');
-  if (fs.existsSync(publicAdm)) return res.sendFile(publicAdm);
   if (fs.existsSync(rootAdm))   return res.sendFile(rootAdm);
+  if (fs.existsSync(publicAdm)) return res.sendFile(publicAdm);
   if (fs.existsSync(sabuyAdm))  return res.sendFile(sabuyAdm);
   res.send('Sabuyphone Admin Dashboard Ready');
 });
